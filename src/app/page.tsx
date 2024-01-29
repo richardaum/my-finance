@@ -1,37 +1,81 @@
-import Link from "next/link";
+"use client";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  AppShell,
+  AppShellHeader,
+  AppShellMain,
+  AppShellNavbar,
+  Burger,
+  Group,
+  Skeleton,
+} from "@mantine/core";
+import dayjs from "dayjs";
+import { DataTable } from "mantine-datatable";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
-        </div>
-      </div>
-    </main>
+    <AppShell
+      header={{ height: 60 }}
+      navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: false } }}
+      padding="md"
+    >
+      <AppShellHeader>
+        <Group h="100%" px="md">
+          <Burger hiddenFrom="sm" size="sm" />
+        </Group>
+      </AppShellHeader>
+
+      <AppShellNavbar p="md">
+        Navbar
+        {Array(15)
+          .fill(0)
+          .map((_, index) => (
+            <Skeleton key={index} h={28} mt="sm" animate />
+          ))}
+      </AppShellNavbar>
+
+      <AppShellMain>
+        <DataTable
+          withTableBorder
+          borderRadius="sm"
+          withColumnBorders
+          striped
+          highlightOnHover
+          records={[
+            {
+              status: "done",
+              date: dayjs().format("DD/MM/YYYY"),
+              name: "Casa",
+              category: "Moradia",
+              account: "Nubank",
+              value: -10,
+            },
+          ]}
+          columns={[
+            {
+              accessor: "status",
+              title: "Situação",
+              render: ({ status }) => (
+                <>
+                  {status === "done" && (
+                    <FontAwesomeIcon
+                      icon={faCircleCheck}
+                      color="var(--mantine-color-green-5)"
+                    />
+                  )}
+                </>
+              ),
+            },
+            { accessor: "date", title: "Data" },
+            { accessor: "description", title: "Descrição" },
+            { accessor: "category", title: "Categoria" },
+            { accessor: "account", title: "Conta" },
+            { accessor: "value", title: "Valor", textAlign: "right" },
+            { accessor: "actions", title: "Ações", textAlign: "right" },
+          ]}
+        />
+      </AppShellMain>
+    </AppShell>
   );
 }
