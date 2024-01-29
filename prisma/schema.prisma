@@ -20,13 +20,14 @@ model Category {
 }
 
 model Entry {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  value      Float
-  date       DateTime
-  categoryId String   @db.ObjectId
-  category   Category @relation(fields: [categoryId], references: [id])
-  repeatId   String?  @db.ObjectId
-  repeat     Repeat?
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  value       Float
+  date        DateTime
+  categoryId  String   @db.ObjectId
+  category    Category @relation(fields: [categoryId], references: [id])
+  repeatId    String?  @db.ObjectId
+  repeat      Repeat?
 }
 
 model Repeat {
