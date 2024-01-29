@@ -1,5 +1,12 @@
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import "@mantine/core/styles.layer.css";
+import "@mantine/notifications/styles.css";
+import "mantine-datatable/styles.layer.css";
 import "~/styles/globals.css";
 
+import { config } from "@fortawesome/fontawesome-svg-core";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { Inter } from "next/font/google";
 
 const inter = Inter({
@@ -13,6 +20,8 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+config.autoAddCss = false;
+
 export default function RootLayout({
   children,
 }: {
@@ -20,7 +29,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>{children}</body>
+      <head>
+        <ColorSchemeScript />
+      </head>
+      <body className={`font-sans ${inter.variable}`}>
+        <MantineProvider defaultColorScheme="auto">
+          <Notifications />
+          {children}
+        </MantineProvider>
+      </body>
     </html>
   );
 }

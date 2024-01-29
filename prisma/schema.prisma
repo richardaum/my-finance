@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  balance Float
+  name    String
+}
+
+model Category {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  Entry Entry[]
+}
+
+model Entry {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  value      Float
+  date       DateTime
+  categoryId String   @db.ObjectId
+  category   Category @relation(fields: [categoryId], references: [id])
+  repeatId   String?  @db.ObjectId
+  repeat     Repeat?
+}
+
+model Repeat {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  entry   Entry  @relation(fields: [entryId], references: [id])
+  entryId String @unique @db.ObjectId
+  times   Int?
+  // enum DAILY, WEEKLY, MONTHLY, YEARLY, INFINITE
+  unit    String
+}

@@ -1,0 +1,43 @@
+{
+  "installments": [
+    {
+      "name": "Calistenia",
+      "origin": "Cartão Nubank",
+      "shared": false,
+      "startPeriod": "2023-12",
+      "endPeriod": "2024-06",
+      "values": [
+        { "date": "2023-12", "value": 31.88 },
+        { "date": "2024-01", "value": 31.88 },
+        { "date": "2024-02", "value": 31.88 },
+        { "date": "2024-03", "value": 31.88 },
+        { "date": "2024-04", "value": 31.88 },
+        { "date": "2024-05", "value": 31.88 },
+        { "date": "2024-06", "value": 31.88 }
+      ]
+    }
+  ],
+  "periods": [
+    {
+      "date": "2023-12",
+      "entries": [
+        { "name": "Saldo inicial", "value": 5348.75 },
+        { "name": "Total de entradas", "value": 71047.01 },
+        { "name": "Total de saídas", "value": -66795.76 }
+      ]
+    },
+    {
+      "date": "2024-01",
+      "entries": [
+        { "name": "Total de entradas", "value": 17959.06 },
+        { "name": "Total de saídas", "value": -27403.71 }
+      ]
+    },
+    {
+      "date": "2024-02",
+      "entries": [
+        { "name": "Conta-corrente Nubank", "value": 0, "paid": false }
+      ]
+    }
+  ]
+}
