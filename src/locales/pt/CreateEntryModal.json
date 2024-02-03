@@ -1,0 +1,11 @@
+{
+  "createEntryModal.account": "Conta",
+  "createEntryModal.amount": "Valor",
+  "createEntryModal.category": "Categoria",
+  "createEntryModal.date": "Data",
+  "createEntryModal.description": "Descrição",
+  "createEntryModal.selectPlaceholder": "Selecione",
+  "createEntryModal.submit": "Salvar",
+  "createEntryModal.tags": "Tags",
+  "createEntryModal.title": "Criar novo lançamento"
+}

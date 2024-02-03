@@ -9,18 +9,17 @@ import {
   Button,
   Group,
   AppShell as MantineAppShell,
-  Modal,
   Stack,
-  TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useCreateEntryModalContext } from "~/contexts/createEntryModal";
+import { CreateEntryModal } from "~/components/CreateEntryModal";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
   const [opened, { toggle }] = useDisclosure();
-  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+  const createEntryModal = useCreateEntryModalContext();
 
   return (
     <MantineAppShell
@@ -40,34 +39,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Button
               fullWidth
               leftSection={<FontAwesomeIcon icon={faPlus} />}
-              onClick={() => setCreateModalOpen(true)}
+              onClick={createEntryModal.open}
             >
               {t("button.addEntry")}
             </Button>
           ) : (
-            <ActionIcon onClick={() => setCreateModalOpen(true)}>
+            <ActionIcon onClick={createEntryModal.open}>
               <FontAwesomeIcon icon={faPlus} />
             </ActionIcon>
           )}
         </Stack>
       </AppShellNavbar>
 
-      <Modal
-        opened={isCreateModalOpen}
-        onClose={() => setCreateModalOpen(false)}
-        title="Create entry"
-      >
-        <Group grow>
-          <TextInput
-            data-autofocus
-            required
-            placeholder="Your first name"
-            label="First name"
-          />
-
-          <TextInput required placeholder="Your last name" label="Last name" />
-        </Group>
-      </Modal>
+      <CreateEntryModal />
 
       {children}
     </MantineAppShell>

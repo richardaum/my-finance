@@ -38,7 +38,7 @@ function StatusIcon({
 }
 
 export function EntryTable({ entries }: { entries: FetchEntriesReturnType }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("EntryTable");
   const [selection, setSelection] = useState<string[]>([]);
 
   const toggleRow = (id: string) =>
