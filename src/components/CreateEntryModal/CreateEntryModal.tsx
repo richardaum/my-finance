@@ -44,8 +44,10 @@ function useFocus() {
 
   return {
     isFocused,
-    onFocus: () => setIsFocused(true),
-    onBlur: () => setIsFocused(false),
+    props: {
+      onFocus: () => setIsFocused(true),
+      onBlur: () => setIsFocused(false),
+    },
   };
 }
 
@@ -101,7 +103,7 @@ export function CreateEntryModal() {
         />
 
         <TextInput
-          {...descriptionFocus}
+          {...descriptionFocus.props}
           label={t("createEntryModal.description")}
           leftSection={
             <FieldIcon {...descriptionFocus}>
@@ -110,7 +112,9 @@ export function CreateEntryModal() {
           }
         />
         <DateInput
-          {...dateFocus}
+          {...dateFocus.props}
+          locale="pt-BR"
+          valueFormat="DD/MM/YYYY"
           label={t("createEntryModal.date")}
           placeholder={t("createEntryModal.selectPlaceholder")}
           leftSection={
@@ -120,7 +124,7 @@ export function CreateEntryModal() {
           }
         />
         <Select
-          {...categoryFocus}
+          {...categoryFocus.props}
           label={t("createEntryModal.category")}
           placeholder={t("createEntryModal.selectPlaceholder")}
           data={["React", "Angular", "Vue", "Svelte"]}
@@ -132,7 +136,7 @@ export function CreateEntryModal() {
           searchable
         />
         <Select
-          {...accountFocus}
+          {...accountFocus.props}
           label={t("createEntryModal.account")}
           placeholder={t("createEntryModal.selectPlaceholder")}
           data={["React", "Angular", "Vue", "Svelte"]}
@@ -144,7 +148,7 @@ export function CreateEntryModal() {
           searchable
         />
         <MultiSelect
-          {...tagsFocus}
+          {...tagsFocus.props}
           label={t("createEntryModal.tags")}
           data={["React", "Angular", "Vue", "Svelte"]}
           leftSection={

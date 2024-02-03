@@ -1,8 +1,9 @@
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "@mantine/core/styles.layer.css";
-import "@mantine/notifications/styles.css";
-import "mantine-datatable/styles.layer.css";
 import "@mantine/dates/styles.layer.css";
+import "@mantine/notifications/styles.css";
+import "dayjs/locale/pt-br";
+import "mantine-datatable/styles.layer.css";
 import "~/styles/globals.css";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -10,6 +11,7 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { Inter } from "next/font/google";
 import { CreateEntryModalProvider } from "~/contexts/createEntryModal";
+import { DateProvider } from "~/providers/DateProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,10 +38,12 @@ export default function RootLayout({
       </head>
       <body className={`font-sans ${inter.variable}`}>
         <MantineProvider defaultColorScheme="auto">
-          <CreateEntryModalProvider>
-            <Notifications />
-            {children}
-          </CreateEntryModalProvider>
+          <DateProvider>
+            <CreateEntryModalProvider>
+              <Notifications />
+              {children}
+            </CreateEntryModalProvider>
+          </DateProvider>
         </MantineProvider>
       </body>
     </html>
