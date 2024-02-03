@@ -3,38 +3,42 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Account {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  id      String  @id @default(uuid())
   balance Float
   name    String
+  entries Entry[]
 }
 
 model Category {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  name  String
-  Entry Entry[]
+  id      String  @id @default(uuid())
+  name    String
+  entries Entry[]
 }
 
 model Entry {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(uuid())
+  status      String
   description String
   value       Float
   date        DateTime
-  categoryId  String   @db.ObjectId
+  categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
-  repeatId    String?  @db.ObjectId
-  repeat      Repeat?
+  repeatId    String?
+  repeat      Repeat?  @relation(references: [id], fields: [repeatId])
+  accountId   String
+  account     Account  @relation(fields: [accountId], references: [id])
 }
 
 model Repeat {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  entry   Entry  @relation(fields: [entryId], references: [id])
-  entryId String @unique @db.ObjectId
+  id      String  @id @default(uuid())
   times   Int?
-  // enum DAILY, WEEKLY, MONTHLY, YEARLY, INFINITE
+  // enum DAILY, WEEKLY, MONTHLY, YEARLY,
+  // enum FINITE, INFINITE
   unit    String
+  entries Entry[]
 }
