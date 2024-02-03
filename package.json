@@ -7,7 +7,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "prisma:update": "prisma generate && prisma db push && prisma db seed"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -23,12 +24,16 @@
     "@t3-oss/env-nextjs": "^0.7.1",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
+    "i18next": "^23.8.2",
+    "i18next-resources-to-backend": "^1.2.0",
     "mantine-datatable": "^7.5.0",
     "next": "^14.0.4",
+    "next-i18n-router": "^5.2.1",
     "prisma": "^5.9.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "zod": "^3.22.4"
+    "react-i18next": "^14.0.1",
+    "zod": "3.21.1"
   },
   "devDependencies": {
     "@types/eslint": "^8.44.7",

@@ -8,6 +8,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { Inter } from "next/font/google";
+import { TranslationsProvider } from "~/components/TranslationProvider";
 
 const inter = Inter({
   subsets: ["latin"],

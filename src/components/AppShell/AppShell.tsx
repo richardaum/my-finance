@@ -15,8 +15,10 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation();
   const [opened, { toggle }] = useDisclosure();
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
 
@@ -40,7 +42,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               leftSection={<FontAwesomeIcon icon={faPlus} />}
               onClick={() => setCreateModalOpen(true)}
             >
-              Adicionar
+              {t("button.addEntry")}
             </Button>
           ) : (
             <ActionIcon onClick={() => setCreateModalOpen(true)}>

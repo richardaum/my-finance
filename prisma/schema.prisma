@@ -24,7 +24,7 @@ model Entry {
   id          String   @id @default(uuid())
   status      String
   description String
-  value       Float
+  amount      Float
   date        DateTime
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])

@@ -32,24 +32,24 @@ async function main() {
   const entries = [
     {
       description: "Almoço",
-      value: 20,
+      amount: 20,
       categoryId: foodCategoryRow.id,
       accountId: accountRow.id,
       status: "PENDING",
     },
     {
       description: "Gasolina",
-      value: 30,
+      amount: 30,
       categoryId: carCategoryRow.id,
       accountId: accountRow.id,
       status: "EXPIRED",
     },
     {
       description: "Lanche",
-      value: 10,
+      amount: 10,
       categoryId: foodCategoryRow.id,
       accountId: accountRow.id,
-      status: "COMPLETED",
+      status: "PAID",
     },
   ];
 

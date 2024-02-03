@@ -18,37 +18,27 @@ import {
   rem,
 } from "@mantine/core";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { currency } from "~/styles/currency";
 import { FetchEntriesReturnType } from "~/types/services";
 
-const statusToLabel = {
-  PENDING: "Pendente",
-  EXPIRED: "Expirado",
-  COMPLETED: "Concluído",
-};
-
 function StatusIcon({
-  color,
   icon,
-  status,
+  ...props
 }: {
   color: DefaultMantineColor;
   icon: IconProp;
-  status: keyof typeof statusToLabel;
+  title: string;
 }) {
   return (
-    <ThemeIcon
-      color={color}
-      size="xs"
-      variant="transparent"
-      title={statusToLabel[status]}
-    >
+    <ThemeIcon size="xs" variant="transparent" {...props}>
       <FontAwesomeIcon icon={icon} />
     </ThemeIcon>
   );
 }
 
-export function EntriesTable({ entries }: { entries: FetchEntriesReturnType }) {
+export function EntryTable({ entries }: { entries: FetchEntriesReturnType }) {
+  const { t } = useTranslation();
   const [selection, setSelection] = useState<string[]>([]);
 
   const toggleRow = (id: string) =>
@@ -77,12 +67,12 @@ export function EntriesTable({ entries }: { entries: FetchEntriesReturnType }) {
                 }
               />
             </MantineTable.Th>
-            <MantineTable.Th>Status</MantineTable.Th>
-            <MantineTable.Th>Descrição</MantineTable.Th>
-            <MantineTable.Th>Categoria</MantineTable.Th>
-            <MantineTable.Th>Conta</MantineTable.Th>
-            <MantineTable.Th>Valor</MantineTable.Th>
-            <MantineTable.Th>Ações</MantineTable.Th>
+            <MantineTable.Th>{t("heading.status")}</MantineTable.Th>
+            <MantineTable.Th>{t("heading.description")}</MantineTable.Th>
+            <MantineTable.Th>{t("heading.category")}</MantineTable.Th>
+            <MantineTable.Th>{t("heading.account")}</MantineTable.Th>
+            <MantineTable.Th>{t("heading.amount")}</MantineTable.Th>
+            <MantineTable.Th>{t("heading.actions")}</MantineTable.Th>
           </MantineTable.Tr>
         </MantineTable.Thead>
         <MantineTable.Tbody>
@@ -104,21 +94,21 @@ export function EntriesTable({ entries }: { entries: FetchEntriesReturnType }) {
                     <StatusIcon
                       color="yellow"
                       icon={faWarning}
-                      status={entry.status}
+                      title={t(`status.${entry.status}`)}
                     />
                   )}
                   {entry.status === "EXPIRED" && (
                     <StatusIcon
                       color="red"
                       icon={faCalendarTimes}
-                      status={entry.status}
+                      title={t(`status.${entry.status}`)}
                     />
                   )}
-                  {entry.status === "COMPLETED" && (
+                  {entry.status === "PAID" && (
                     <StatusIcon
                       color="green"
                       icon={faCircleCheck}
-                      status={entry.status}
+                      title={t(`status.${entry.status}`)}
                     />
                   )}
                 </MantineTable.Td>
@@ -132,7 +122,7 @@ export function EntriesTable({ entries }: { entries: FetchEntriesReturnType }) {
                 <MantineTable.Td>{entry.category.name}</MantineTable.Td>
                 <MantineTable.Td>{entry.account.name}</MantineTable.Td>
                 <MantineTable.Td>
-                  {currency.format(entry.value)}
+                  {currency.format(entry.amount)}
                 </MantineTable.Td>
               </MantineTable.Tr>
             );
