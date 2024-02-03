@@ -19,8 +19,9 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { currency } from "~/styles/currency";
+import { currency } from "~/utils/currency";
 import { FetchEntriesReturnType } from "~/types/services";
+import { date } from "~/utils/date";
 
 function StatusIcon({
   icon,
@@ -68,11 +69,12 @@ export function EntryTable({ entries }: { entries: FetchEntriesReturnType }) {
               />
             </MantineTable.Th>
             <MantineTable.Th>{t("heading.status")}</MantineTable.Th>
+            <MantineTable.Th>{t("heading.date")}</MantineTable.Th>
             <MantineTable.Th>{t("heading.description")}</MantineTable.Th>
             <MantineTable.Th>{t("heading.category")}</MantineTable.Th>
             <MantineTable.Th>{t("heading.account")}</MantineTable.Th>
-            <MantineTable.Th>{t("heading.amount")}</MantineTable.Th>
-            <MantineTable.Th>{t("heading.actions")}</MantineTable.Th>
+            <MantineTable.Th ta="right">{t("heading.amount")}</MantineTable.Th>
+            <MantineTable.Th ta="right">{t("heading.actions")}</MantineTable.Th>
           </MantineTable.Tr>
         </MantineTable.Thead>
         <MantineTable.Tbody>
@@ -112,16 +114,11 @@ export function EntryTable({ entries }: { entries: FetchEntriesReturnType }) {
                     />
                   )}
                 </MantineTable.Td>
-                <MantineTable.Td>
-                  <Group gap="sm">
-                    <Text size="sm" fw={500}>
-                      {entry.description}
-                    </Text>
-                  </Group>
-                </MantineTable.Td>
+                <MantineTable.Td>{date.format(entry.date)}</MantineTable.Td>
+                <MantineTable.Td>{entry.description}</MantineTable.Td>
                 <MantineTable.Td>{entry.category.name}</MantineTable.Td>
                 <MantineTable.Td>{entry.account.name}</MantineTable.Td>
-                <MantineTable.Td>
+                <MantineTable.Td ta="right">
                   {currency.format(entry.amount)}
                 </MantineTable.Td>
               </MantineTable.Tr>
