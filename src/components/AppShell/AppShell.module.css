@@ -1,0 +1,11 @@
+.toggle {
+  transform: translateX(50%);
+  border-radius: 100%;
+  position: absolute;
+  padding: var(--mantine-spacing-xs);
+  right: 0;
+}
+
+.navbar {
+  transition: width 200ms ease;
+}
