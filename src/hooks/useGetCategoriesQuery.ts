@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { FetchCategoriesReturnType } from "~/types/services";
 
-export const getCategoriesQueryKey = ["entries"] as const;
+export const getCategoriesQueryKey = ["categories"] as const;
 
 export function useGetCategoriesQuery(options: { initialData: FetchCategoriesReturnType }) {
   return useQuery({

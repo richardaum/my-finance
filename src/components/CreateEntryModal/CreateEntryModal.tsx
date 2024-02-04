@@ -12,8 +12,9 @@ import { CurrencyInput } from "~/components/CurrencyInput";
 import { useCreateEntryModalContext } from "~/contexts/createEntryModal";
 import { useCreateEntryMutation } from "~/hooks/useCreateEntryMutation";
 import { useFocus } from "~/hooks/useFocus";
+import { useGetAccountsQuery } from "~/hooks/useGetAccountsQuery";
 import { useGetCategoriesQuery } from "~/hooks/useGetCategoriesQuery";
-import { FetchCategoriesReturnType } from "~/types/services";
+import { FetchAccountsReturnType, FetchCategoriesReturnType } from "~/types/services";
 import { mergeFunctions } from "~/utils/merge";
 
 export function currencyFormatter(value: string) {
@@ -44,6 +45,7 @@ function FieldIcon({ children, isFocused }: { children: React.ReactNode; isFocus
 
 type Props = {
   categories: FetchCategoriesReturnType;
+  accounts: FetchAccountsReturnType;
 };
 
 export function CreateEntryModal(props: Props) {
@@ -56,18 +58,18 @@ export function CreateEntryModal(props: Props) {
   const tagsFocus = useFocus();
   const createEntryMutation = useCreateEntryMutation();
   const categoriesResult = useGetCategoriesQuery({ initialData: props.categories });
+  const accountsResult = useGetAccountsQuery({ initialData: props.accounts });
 
   const form = useForm({
     initialValues: {
       description: "",
       amount: 0,
       date: new Date(),
-      category: "",
-      account: "",
+      category: categoriesResult.data[0]?.id,
+      account: accountsResult.data[0]?.id,
       tags: [],
     },
     validate: {
-      description: (value) => (value.length <= 0 ? t("createEntryModal.required") : null),
       amount: (value) => (value <= 0 ? t("createEntryModal.amount.lessOrEqualToZero") : null),
     },
   });
@@ -85,12 +87,8 @@ export function CreateEntryModal(props: Props) {
             ...values,
             status: "PENDING",
             date: new Date(),
-            category: {
-              connect: { name: "Alimentação" },
-            },
-            account: {
-              connect: { name: "Nubank" },
-            },
+            category: { connect: { id: values.category } },
+            account: { connect: { id: values.account } },
             tags: {},
           });
 
@@ -109,6 +107,7 @@ export function CreateEntryModal(props: Props) {
 
           <TextInput
             {...mergeWith(descriptionFocus.props, form.getInputProps("description"), mergeFunctions)}
+            required
             label={t("createEntryModal.description")}
             leftSection={
               <FieldIcon {...descriptionFocus}>
@@ -118,6 +117,7 @@ export function CreateEntryModal(props: Props) {
           />
           <DateInput
             {...mergeWith(dateFocus.props, form.getInputProps("date"), mergeFunctions)}
+            required
             locale="pt-BR"
             valueFormat="DD/MM/YYYY"
             label={t("createEntryModal.date")}
@@ -130,6 +130,9 @@ export function CreateEntryModal(props: Props) {
           />
           <Select
             {...mergeWith(categoryFocus.props, form.getInputProps("category"), mergeFunctions)}
+            required
+            searchable
+            allowDeselect={false}
             label={t("createEntryModal.category")}
             placeholder={t("createEntryModal.selectPlaceholder")}
             data={categoriesResult.data.map((category) => ({ label: category.name, value: category.id }))}
@@ -139,30 +142,20 @@ export function CreateEntryModal(props: Props) {
                 <FontAwesomeIcon icon={faBookmark} />
               </FieldIcon>
             }
-            searchable
           />
           <Select
             {...mergeWith(accountFocus.props, form.getInputProps("account"), mergeFunctions)}
+            required
+            searchable
+            allowDeselect={false}
             label={t("createEntryModal.account")}
             placeholder={t("createEntryModal.selectPlaceholder")}
-            data={["React", "Angular", "Vue", "Svelte"]}
+            data={accountsResult.data.map((account) => ({ label: account.name, value: account.id }))}
             leftSection={
               <FieldIcon {...accountFocus}>
                 <FontAwesomeIcon icon={faBank} />
               </FieldIcon>
             }
-            searchable
-          />
-          <MultiSelect
-            {...mergeWith(tagsFocus.props, form.getInputProps("tags"), mergeFunctions)}
-            label={t("createEntryModal.tags")}
-            data={["React", "Angular", "Vue", "Svelte"]}
-            leftSection={
-              <FieldIcon {...tagsFocus}>
-                <FontAwesomeIcon icon={faTags} />
-              </FieldIcon>
-            }
-            searchable
           />
 
           <Button type="submit" variant="filled" onClick={() => {}}>

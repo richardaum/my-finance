@@ -21,7 +21,6 @@ function StatusIcon({ icon, ...props }: { color: DefaultMantineColor; icon: Icon
 
 type Props = {
   entries: FetchEntriesReturnType;
-  categories: FetchCategoriesReturnType;
 };
 
 export function EntryTable(props: Props) {
