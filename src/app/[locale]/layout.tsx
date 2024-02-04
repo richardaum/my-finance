@@ -10,7 +10,6 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { Inter } from "next/font/google";
-import { CreateEntryModalProvider } from "~/contexts/createEntryModal";
 import { DateProvider } from "~/providers/DateProvider";
 import { ReactQueryProvider } from "~/providers/ReactQueryProvider";
 
@@ -37,10 +36,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ReactQueryProvider>
           <MantineProvider defaultColorScheme="auto" theme={{ fontFamily: "Lato" }}>
             <DateProvider>
-              <CreateEntryModalProvider>
-                <Notifications />
-                {children}
-              </CreateEntryModalProvider>
+              <Notifications />
+              {children}
             </DateProvider>
           </MantineProvider>
         </ReactQueryProvider>

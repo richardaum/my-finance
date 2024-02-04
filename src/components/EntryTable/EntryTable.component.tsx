@@ -34,8 +34,6 @@ export function EntryTable(props: { entries: FetchEntriesReturnType }) {
 
   return (
     <ScrollArea>
-      {entriesResult.data.length}
-      {entriesResult.error?.message}
       <MantineTable miw={800} verticalSpacing="sm">
         <MantineTable.Thead>
           <MantineTable.Tr>

@@ -8,7 +8,7 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "prisma:update": "prisma generate && prisma db push && prisma db seed",
+    "prisma:update": "prisma generate && prisma db push && sleep 3 && prisma db seed",
     "translations:generate": "scripty",
     "translations:watch": "scripty"
   },

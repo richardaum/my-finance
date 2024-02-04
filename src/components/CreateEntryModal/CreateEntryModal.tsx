@@ -1,10 +1,10 @@
-"use client";
 import { faBookmark, faCalendar, faNoteSticky } from "@fortawesome/free-regular-svg-icons";
 import { faBank, faTags } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Modal, MultiSelect, Select, Stack, TextInput, ThemeIcon } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { mergeWith } from "lodash";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -75,15 +75,13 @@ export function CreateEntryModal() {
     },
   });
 
+  function closeModal() {
+    form.reset();
+    createEntryModal.close();
+  }
+
   return (
-    <Modal
-      opened={createEntryModal.isOpen}
-      onClose={() => {
-        form.reset();
-        createEntryModal.close();
-      }}
-      title={t("createEntryModal.title")}
-    >
+    <Modal opened={createEntryModal.isOpen} onClose={closeModal} title={t("createEntryModal.title")}>
       <form
         onSubmit={form.onSubmit((values) => {
           createEntryMutation.mutate({
@@ -99,7 +97,14 @@ export function CreateEntryModal() {
             tags: {},
           });
 
-          createEntryModal.close();
+          closeModal();
+
+          notifications.show({
+            title: t("createEntryModal.success.title"),
+            message: t("createEntryModal.success.message", { description: values.description }),
+            color: "green",
+            withBorder: true,
+          });
         })}
       >
         <Stack>

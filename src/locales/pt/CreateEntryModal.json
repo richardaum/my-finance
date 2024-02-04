@@ -9,5 +9,7 @@
   "createEntryModal.selectPlaceholder": "Selecione",
   "createEntryModal.submit": "Salvar",
   "createEntryModal.tags": "Tags",
-  "createEntryModal.title": "Criar novo lançamento"
+  "createEntryModal.title": "Criar novo lançamento",
+  "createEntryModal.success.title": "Lançamento criado",
+  "createEntryModal.success.message": "O lançamento \"{{description}}\" foi criado com sucesso"
 }
