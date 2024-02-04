@@ -1,27 +1,19 @@
 "use client";
-import {
-  faCalendar,
-  faNoteSticky,
-  faBookmark,
-} from "@fortawesome/free-regular-svg-icons";
+import { faBookmark, faCalendar, faNoteSticky } from "@fortawesome/free-regular-svg-icons";
 import { faBank, faTags } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Button,
-  Modal,
-  MultiSelect,
-  Select,
-  Stack,
-  TextInput,
-  ThemeIcon,
-} from "@mantine/core";
+import { Button, Modal, MultiSelect, Select, Stack, TextInput, ThemeIcon } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
+import { useForm } from "@mantine/form";
+import { mergeWith } from "lodash";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { NumberFormatBase } from "react-number-format";
+import { CurrencyInput } from "~/components/CurrencyInput";
 import { useCreateEntryModalContext } from "~/contexts/createEntryModal";
+import { useCreateEntryMutation } from "~/hooks/useCreateEntryMutation";
+import { mergeFunctions } from "~/utils/merge";
 
-export default function currencyFormatter(value: string) {
+export function currencyFormatter(value: string) {
   if (!value) return "";
 
   const number = Number(value);
@@ -35,7 +27,7 @@ export default function currencyFormatter(value: string) {
   return `${amount}`;
 }
 
-function removeFormatting(value: string) {
+export function removeFormatting(value: string) {
   return value.replace(/[^0-9]/g, "");
 }
 
@@ -51,13 +43,7 @@ function useFocus() {
   };
 }
 
-function FieldIcon({
-  children,
-  isFocused,
-}: {
-  children: React.ReactNode;
-  isFocused: boolean;
-}) {
+function FieldIcon({ children, isFocused }: { children: React.ReactNode; isFocused: boolean }) {
   return (
     <ThemeIcon variant="transparent" size="xs" c={isFocused ? "blue" : "gray"}>
       {children}
@@ -68,99 +54,119 @@ function FieldIcon({
 export function CreateEntryModal() {
   const { t } = useTranslation("CreateEntryModal");
   const createEntryModal = useCreateEntryModalContext();
-  const [amount, setAmount] = useState<number>();
-
   const descriptionFocus = useFocus();
   const dateFocus = useFocus();
   const categoryFocus = useFocus();
   const accountFocus = useFocus();
   const tagsFocus = useFocus();
+  const createEntryMutation = useCreateEntryMutation();
+  const form = useForm({
+    initialValues: {
+      description: "",
+      amount: 0,
+      date: new Date(),
+      category: "",
+      account: "",
+      tags: [],
+    },
+    validate: {
+      description: (value) => (value.length <= 0 ? t("createEntryModal.required") : null),
+      amount: (value) => (value <= 0 ? t("createEntryModal.amount.lessOrEqualToZero") : null),
+    },
+  });
 
   return (
     <Modal
       opened={createEntryModal.isOpen}
-      onClose={createEntryModal.close}
+      onClose={() => {
+        form.reset();
+        createEntryModal.close();
+      }}
       title={t("createEntryModal.title")}
     >
-      <Stack>
-        <NumberFormatBase
-          required
-          data-autofocus
-          customInput={TextInput}
-          format={currencyFormatter}
-          removeFormatting={removeFormatting}
-          prefix={"R$ "}
-          placeholder="R$ 0,00"
-          value={amount}
-          onValueChange={({ floatValue, formattedValue }, { event }) => {
-            setAmount(floatValue);
-            if (!event) return;
-            const target = event.target as HTMLInputElement;
-            const valueLength = formattedValue.length;
-            target.setSelectionRange(valueLength, valueLength);
-          }}
-          size="xl"
-        />
+      <form
+        onSubmit={form.onSubmit((values) => {
+          createEntryMutation.mutate({
+            ...values,
+            status: "PENDING",
+            date: new Date(),
+            category: {
+              connect: { name: "Alimentação" },
+            },
+            account: {
+              connect: { name: "Nubank" },
+            },
+            tags: {},
+          });
 
-        <TextInput
-          {...descriptionFocus.props}
-          label={t("createEntryModal.description")}
-          leftSection={
-            <FieldIcon {...descriptionFocus}>
-              <FontAwesomeIcon icon={faNoteSticky} />
-            </FieldIcon>
-          }
-        />
-        <DateInput
-          {...dateFocus.props}
-          locale="pt-BR"
-          valueFormat="DD/MM/YYYY"
-          label={t("createEntryModal.date")}
-          placeholder={t("createEntryModal.selectPlaceholder")}
-          leftSection={
-            <FieldIcon {...dateFocus}>
-              <FontAwesomeIcon icon={faCalendar} />
-            </FieldIcon>
-          }
-        />
-        <Select
-          {...categoryFocus.props}
-          label={t("createEntryModal.category")}
-          placeholder={t("createEntryModal.selectPlaceholder")}
-          data={["React", "Angular", "Vue", "Svelte"]}
-          leftSection={
-            <FieldIcon {...categoryFocus}>
-              <FontAwesomeIcon icon={faBookmark} />
-            </FieldIcon>
-          }
-          searchable
-        />
-        <Select
-          {...accountFocus.props}
-          label={t("createEntryModal.account")}
-          placeholder={t("createEntryModal.selectPlaceholder")}
-          data={["React", "Angular", "Vue", "Svelte"]}
-          leftSection={
-            <FieldIcon {...accountFocus}>
-              <FontAwesomeIcon icon={faBank} />
-            </FieldIcon>
-          }
-          searchable
-        />
-        <MultiSelect
-          {...tagsFocus.props}
-          label={t("createEntryModal.tags")}
-          data={["React", "Angular", "Vue", "Svelte"]}
-          leftSection={
-            <FieldIcon {...tagsFocus}>
-              <FontAwesomeIcon icon={faTags} />
-            </FieldIcon>
-          }
-          searchable
-        />
+          createEntryModal.close();
+        })}
+      >
+        <Stack>
+          <CurrencyInput {...form.getInputProps("amount")} required data-autofocus />
 
-        <Button variant="filled">{t("createEntryModal.submit")}</Button>
-      </Stack>
+          <TextInput
+            {...mergeWith(descriptionFocus.props, form.getInputProps("description"), mergeFunctions)}
+            label={t("createEntryModal.description")}
+            leftSection={
+              <FieldIcon {...descriptionFocus}>
+                <FontAwesomeIcon icon={faNoteSticky} />
+              </FieldIcon>
+            }
+          />
+          <DateInput
+            {...mergeWith(dateFocus.props, form.getInputProps("date"), mergeFunctions)}
+            locale="pt-BR"
+            valueFormat="DD/MM/YYYY"
+            label={t("createEntryModal.date")}
+            placeholder={t("createEntryModal.selectPlaceholder")}
+            leftSection={
+              <FieldIcon {...dateFocus}>
+                <FontAwesomeIcon icon={faCalendar} />
+              </FieldIcon>
+            }
+          />
+          <Select
+            {...mergeWith(categoryFocus.props, form.getInputProps("category"), mergeFunctions)}
+            label={t("createEntryModal.category")}
+            placeholder={t("createEntryModal.selectPlaceholder")}
+            data={["React", "Angular", "Vue", "Svelte"]}
+            leftSection={
+              <FieldIcon {...categoryFocus}>
+                <FontAwesomeIcon icon={faBookmark} />
+              </FieldIcon>
+            }
+            searchable
+          />
+          <Select
+            {...mergeWith(accountFocus.props, form.getInputProps("account"), mergeFunctions)}
+            label={t("createEntryModal.account")}
+            placeholder={t("createEntryModal.selectPlaceholder")}
+            data={["React", "Angular", "Vue", "Svelte"]}
+            leftSection={
+              <FieldIcon {...accountFocus}>
+                <FontAwesomeIcon icon={faBank} />
+              </FieldIcon>
+            }
+            searchable
+          />
+          <MultiSelect
+            {...mergeWith(tagsFocus.props, form.getInputProps("tags"), mergeFunctions)}
+            label={t("createEntryModal.tags")}
+            data={["React", "Angular", "Vue", "Svelte"]}
+            leftSection={
+              <FieldIcon {...tagsFocus}>
+                <FontAwesomeIcon icon={faTags} />
+              </FieldIcon>
+            }
+            searchable
+          />
+
+          <Button type="submit" variant="filled" onClick={() => {}}>
+            {t("createEntryModal.submit")}
+          </Button>
+        </Stack>
+      </form>
     </Modal>
   );
 }

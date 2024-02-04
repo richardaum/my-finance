@@ -12,6 +12,7 @@ import { Notifications } from "@mantine/notifications";
 import { Inter } from "next/font/google";
 import { CreateEntryModalProvider } from "~/contexts/createEntryModal";
 import { DateProvider } from "~/providers/DateProvider";
+import { ReactQueryProvider } from "~/providers/ReactQueryProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,25 +27,23 @@ export const metadata = {
 
 config.autoAddCss = false;
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body className={`font-sans ${inter.variable}`}>
-        <MantineProvider defaultColorScheme="auto">
-          <DateProvider>
-            <CreateEntryModalProvider>
-              <Notifications />
-              {children}
-            </CreateEntryModalProvider>
-          </DateProvider>
-        </MantineProvider>
+        <ReactQueryProvider>
+          <MantineProvider defaultColorScheme="auto" theme={{ fontFamily: "Lato" }}>
+            <DateProvider>
+              <CreateEntryModalProvider>
+                <Notifications />
+                {children}
+              </CreateEntryModalProvider>
+            </DateProvider>
+          </MantineProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

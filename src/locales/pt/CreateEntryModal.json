@@ -1,9 +1,11 @@
 {
   "createEntryModal.account": "Conta",
   "createEntryModal.amount": "Valor",
+  "createEntryModal.amount.lessOrEqualToZero": "O valor deve ser maior que zero",
   "createEntryModal.category": "Categoria",
   "createEntryModal.date": "Data",
   "createEntryModal.description": "Descrição",
+  "createEntryModal.required": "O valor é obrigatório",
   "createEntryModal.selectPlaceholder": "Selecione",
   "createEntryModal.submit": "Salvar",
   "createEntryModal.tags": "Tags",

@@ -10,19 +10,19 @@ datasource db {
 model Account {
   id      String  @id @default(uuid())
   balance Float
-  name    String
+  name    String  @unique
   entries Entry[]
 }
 
 model Category {
   id      String  @id @default(uuid())
-  name    String
+  name    String  @unique
   entries Entry[]
 }
 
 model Entry {
   id          String   @id @default(uuid())
-  status      String
+  status      Status
   description String
   amount      Float
   date        DateTime
@@ -32,6 +32,7 @@ model Entry {
   repeat      Repeat?  @relation(references: [id], fields: [repeatId])
   accountId   String
   account     Account  @relation(fields: [accountId], references: [id])
+  tags        Tag[]
 }
 
 model Repeat {
@@ -41,4 +42,16 @@ model Repeat {
   // enum FINITE, INFINITE
   unit    String
   entries Entry[]
+}
+
+model Tag {
+  id      String  @id @default(uuid())
+  label   String  @unique
+  entries Entry[]
+}
+
+enum Status {
+  PENDING
+  PAID
+  EXPIRED
 }
