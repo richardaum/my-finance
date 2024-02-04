@@ -1,3 +1,4 @@
+"use client";
 import { faBookmark, faCalendar, faNoteSticky } from "@fortawesome/free-regular-svg-icons";
 import { faBank, faTags } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,11 +7,13 @@ import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { mergeWith } from "lodash";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CurrencyInput } from "~/components/CurrencyInput";
 import { useCreateEntryModalContext } from "~/contexts/createEntryModal";
 import { useCreateEntryMutation } from "~/hooks/useCreateEntryMutation";
+import { useFocus } from "~/hooks/useFocus";
+import { useGetCategoriesQuery } from "~/hooks/useGetCategoriesQuery";
+import { FetchCategoriesReturnType } from "~/types/services";
 import { mergeFunctions } from "~/utils/merge";
 
 export function currencyFormatter(value: string) {
@@ -31,18 +34,6 @@ export function removeFormatting(value: string) {
   return value.replace(/[^0-9]/g, "");
 }
 
-function useFocus() {
-  const [isFocused, setIsFocused] = useState(false);
-
-  return {
-    isFocused,
-    props: {
-      onFocus: () => setIsFocused(true),
-      onBlur: () => setIsFocused(false),
-    },
-  };
-}
-
 function FieldIcon({ children, isFocused }: { children: React.ReactNode; isFocused: boolean }) {
   return (
     <ThemeIcon variant="transparent" size="xs" c={isFocused ? "blue" : "gray"}>
@@ -51,7 +42,11 @@ function FieldIcon({ children, isFocused }: { children: React.ReactNode; isFocus
   );
 }
 
-export function CreateEntryModal() {
+type Props = {
+  categories: FetchCategoriesReturnType;
+};
+
+export function CreateEntryModal(props: Props) {
   const { t } = useTranslation("CreateEntryModal");
   const createEntryModal = useCreateEntryModalContext();
   const descriptionFocus = useFocus();
@@ -60,6 +55,8 @@ export function CreateEntryModal() {
   const accountFocus = useFocus();
   const tagsFocus = useFocus();
   const createEntryMutation = useCreateEntryMutation();
+  const categoriesResult = useGetCategoriesQuery({ initialData: props.categories });
+
   const form = useForm({
     initialValues: {
       description: "",
@@ -135,7 +132,8 @@ export function CreateEntryModal() {
             {...mergeWith(categoryFocus.props, form.getInputProps("category"), mergeFunctions)}
             label={t("createEntryModal.category")}
             placeholder={t("createEntryModal.selectPlaceholder")}
-            data={["React", "Angular", "Vue", "Svelte"]}
+            data={categoriesResult.data.map((category) => ({ label: category.name, value: category.id }))}
+            selectFirstOptionOnChange
             leftSection={
               <FieldIcon {...categoryFocus}>
                 <FontAwesomeIcon icon={faBookmark} />

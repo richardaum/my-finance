@@ -14,7 +14,6 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { useTranslation } from "react-i18next";
 import { useCreateEntryModalContext } from "~/contexts/createEntryModal";
-import { CreateEntryModal } from "~/components/CreateEntryModal";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
@@ -22,11 +21,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const createEntryModal = useCreateEntryModalContext();
 
   return (
-    <MantineAppShell
-      header={{ height: 60 }}
-      navbar={{ width: opened ? 300 : 80, breakpoint: "sm" }}
-      padding="md"
-    >
+    <MantineAppShell header={{ height: 60 }} navbar={{ width: opened ? 300 : 80, breakpoint: "sm" }} padding="md">
       <AppShellHeader>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} size="sm" />
@@ -36,11 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <AppShellNavbar p="lg">
         <Stack align="center">
           {opened ? (
-            <Button
-              fullWidth
-              leftSection={<FontAwesomeIcon icon={faPlus} />}
-              onClick={createEntryModal.open}
-            >
+            <Button fullWidth leftSection={<FontAwesomeIcon icon={faPlus} />} onClick={createEntryModal.open}>
               {t("button.addEntry")}
             </Button>
           ) : (
@@ -50,8 +41,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           )}
         </Stack>
       </AppShellNavbar>
-
-      <CreateEntryModal />
 
       {children}
     </MantineAppShell>

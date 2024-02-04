@@ -7,7 +7,7 @@ import { Checkbox, DefaultMantineColor, Table as MantineTable, ScrollArea, Theme
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetEntriesQuery } from "~/hooks/useGetEntriesQuery";
-import { FetchEntriesReturnType } from "~/types/services";
+import { FetchCategoriesReturnType, FetchEntriesReturnType } from "~/types/services";
 import { currency } from "~/utils/currency";
 import { date } from "~/utils/date";
 
@@ -19,7 +19,12 @@ function StatusIcon({ icon, ...props }: { color: DefaultMantineColor; icon: Icon
   );
 }
 
-export function EntryTable(props: { entries: FetchEntriesReturnType }) {
+type Props = {
+  entries: FetchEntriesReturnType;
+  categories: FetchCategoriesReturnType;
+};
+
+export function EntryTable(props: Props) {
   const { t } = useTranslation("EntryTable");
   const [selection, setSelection] = useState<string[]>([]);
   const entriesResult = useGetEntriesQuery({ initialData: props.entries });

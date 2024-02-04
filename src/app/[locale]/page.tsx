@@ -5,6 +5,8 @@ import { TranslationsProvider } from "~/components/TranslationProvider";
 import { fetchEntries } from "~/services/fetchEntries";
 import { initTranslations } from "~/app/i18n";
 import { CreateEntryModalProvider } from "~/contexts/createEntryModal";
+import { CreateEntryModal } from "~/components/CreateEntryModal";
+import { fetchCategories } from "~/services/fetchCategories";
 
 type Props = {
   params: {
@@ -18,6 +20,7 @@ export default async function HomePage({ params: { locale } }: Props) {
   const { resources } = await initTranslations(locale, namespaces);
 
   const entries = await fetchEntries();
+  const categories = await fetchCategories();
 
   return (
     <TranslationsProvider namespaces={namespaces} locale={locale} resources={resources}>
@@ -25,10 +28,12 @@ export default async function HomePage({ params: { locale } }: Props) {
         <AppShell>
           <AppShellMain>
             <Container>
-              <EntryTable entries={entries} />
+              <EntryTable entries={entries} categories={categories} />
             </Container>
           </AppShellMain>
         </AppShell>
+
+        <CreateEntryModal categories={categories} />
       </CreateEntryModalProvider>
     </TranslationsProvider>
   );
