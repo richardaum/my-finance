@@ -1,18 +1,7 @@
 "use client";
 import { faChevronLeft, faChevronRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  ActionIcon,
-  AppShellHeader,
-  AppShellNavbar,
-  Box,
-  Burger,
-  Button,
-  Flex,
-  Group,
-  AppShell as MantineAppShell,
-  Stack,
-} from "@mantine/core";
+import { ActionIcon, AppShellNavbar, Button, Flex, AppShell as MantineAppShell, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useTranslation } from "react-i18next";
 import { useCreateEntryModalContext } from "~/contexts/createEntryModal";

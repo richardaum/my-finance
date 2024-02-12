@@ -1,13 +1,13 @@
 "use client";
 
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { type IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCalendarTimes, faCircleCheck, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Checkbox, DefaultMantineColor, Table as MantineTable, ScrollArea, ThemeIcon, rem } from "@mantine/core";
+import { Checkbox, type DefaultMantineColor, Table as MantineTable, ScrollArea, ThemeIcon, rem } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetEntriesQuery } from "~/hooks/useGetEntriesQuery";
-import { FetchCategoriesReturnType, FetchEntriesReturnType } from "~/types/services";
+import { FetchCategoriesReturnType, type FetchEntriesReturnType } from "~/types/services";
 import { currency } from "~/utils/currency";
 import { date } from "~/utils/date";
 

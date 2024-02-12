@@ -5,11 +5,22 @@
   "createEntryModal.category": "Categoria",
   "createEntryModal.date": "Data",
   "createEntryModal.description": "Descrição",
+  "createEntryModal.moreOptions": "Mais opções",
+  "createEntryModal.label.DAILY": "Diário",
+  "createEntryModal.label.MONTHLY": "Mensal",
+  "createEntryModal.label.WEEKLY": "Semanal",
+  "createEntryModal.label.YEARLY": "Anual",
+
+  "createEntryModal.split.alreadyStarted": "Em {{times}}x de {{amount}}, começando a partir da {{initialSplit}}º parcela",
+  "createEntryModal.split.fromBegining": "Em {{times}}x de {{amount}}",
+  "createEntryModal.repeat": "Por {{times}} {{frequency}}, parcelas de {{amount}}",
+
   "createEntryModal.required": "O valor é obrigatório",
   "createEntryModal.selectPlaceholder": "Selecione",
   "createEntryModal.submit": "Salvar",
-  "createEntryModal.tags": "Tags",
-  "createEntryModal.title": "Criar novo lançamento",
+  "createEntryModal.success.message": "O lançamento \"{{description}}\" foi criado com sucesso",
   "createEntryModal.success.title": "Lançamento criado",
-  "createEntryModal.success.message": "O lançamento \"{{description}}\" foi criado com sucesso"
+  "createEntryModal.tags": "Tags",
+  "createEntryModal.times.greaterThanOne": "Deve ser maior que 1",
+  "createEntryModal.title": "Criar novo lançamento"
 }

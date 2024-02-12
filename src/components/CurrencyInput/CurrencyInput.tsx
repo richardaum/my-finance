@@ -1,7 +1,24 @@
 "use client";
-import { NumberInputProps, TextInput, TextInputProps } from "@mantine/core";
+import { type NumberInputProps, TextInput, type TextInputProps } from "@mantine/core";
 import { NumberFormatBase } from "react-number-format";
-import { currencyFormatter, removeFormatting } from "../CreateEntryModal";
+
+function currencyFormatter(value: string) {
+  if (!value) return "";
+
+  const number = Number(value);
+  if (number === 0) return "";
+
+  const amount = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(number / 100);
+
+  return `${amount}`;
+}
+
+function removeFormatting(value: string) {
+  return value.replace(/[^0-9]/g, "");
+}
 
 export function CurrencyInput(
   props: Omit<TextInputProps, "value" | "type" | "defaultValue" | "onChange"> &
