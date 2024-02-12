@@ -370,9 +370,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/core@npm:^7.5.0":
-  version: 7.5.0
-  resolution: "@mantine/core@npm:7.5.0"
+"@mantine/core@npm:^7.5.1":
+  version: 7.5.1
+  resolution: "@mantine/core@npm:7.5.1"
   dependencies:
     "@floating-ui/react": "npm:^0.24.8"
     clsx: "npm:2.0.0"
@@ -381,10 +381,10 @@ __metadata:
     react-textarea-autosize: "npm:8.5.3"
     type-fest: "npm:^3.13.1"
   peerDependencies:
-    "@mantine/hooks": 7.5.0
+    "@mantine/hooks": 7.5.1
     react: ^18.2.0
     react-dom: ^18.2.0
-  checksum: 4350f5586a1d4983a2121a6af82137cf55d0b523c6576423df2a21c6c81ee87d0547afd0b29d7d1c650e5e6abf00a8ba394fc9db1f10363cd7d7fbbfc256043b
+  checksum: 37afdb551f19a96fb0b07dbd142db260daccffcb225bfd2ca0d9072e1097c3d44a18a6de2c3f32ce55aa4d526a5dc127dc573ef2be3f00f26b461154d4f02e0d
   languageName: node
   linkType: hard
 
@@ -3457,7 +3457,7 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": "npm:^6.5.1"
     "@fortawesome/free-solid-svg-icons": "npm:^6.5.1"
     "@fortawesome/react-fontawesome": "npm:^0.2.0"
-    "@mantine/core": "npm:^7.5.0"
+    "@mantine/core": "npm:^7.5.1"
     "@mantine/dates": "npm:^7.5.1"
     "@mantine/form": "npm:^7.5.1"
     "@mantine/hooks": "npm:^7.5.0"
@@ -3486,15 +3486,15 @@ __metadata:
     i18next-resources-to-backend: "npm:^1.2.0"
     lodash: "npm:^4.17.21"
     mantine-datatable: "npm:^7.5.0"
-    next: "npm:^14.0.4"
+    next: "npm:^14.1.0"
     next-i18n-router: "npm:^5.2.1"
     postcss: "npm:^8.4.31"
     postcss-preset-mantine: "npm:^1.12.3"
     prettier: "npm:^3.1.0"
     prettier-plugin-tailwindcss: "npm:^0.5.7"
     prisma: "npm:^5.9.1"
-    react: "npm:18.2.0"
-    react-dom: "npm:18.2.0"
+    react: "npm:^18.2.0"
+    react-dom: "npm:^18.2.0"
     react-i18next: "npm:^14.0.1"
     react-number-format: "npm:^5.3.1"
     scripty: "npm:^2.1.1"
@@ -3537,7 +3537,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^14.0.4":
+"next@npm:^14.1.0":
   version: 14.1.0
   resolution: "next@npm:14.1.0"
   dependencies:
@@ -4105,7 +4105,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:18.2.0":
+"react-dom@npm:^18.2.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
   dependencies:
@@ -4234,7 +4234,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.2.0":
+"react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:
