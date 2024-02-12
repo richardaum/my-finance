@@ -36,11 +36,10 @@ model Entry {
 }
 
 model Repeat {
-  id      String  @id @default(uuid())
+  id      String     @id @default(uuid())
   times   Int?
-  // enum DAILY, WEEKLY, MONTHLY, YEARLY,
-  // enum FINITE, INFINITE
-  unit    String
+  unit    RepeatUnit
+  endDate DateTime?
   entries Entry[]
 }
 
@@ -54,4 +53,11 @@ enum Status {
   PENDING
   PAID
   EXPIRED
+}
+
+enum RepeatUnit {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
 }
