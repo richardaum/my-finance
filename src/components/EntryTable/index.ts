@@ -1,1 +1,1 @@
-export * from "./EntryTable.component";
+export * from "./EntryTable";

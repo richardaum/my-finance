@@ -38,7 +38,7 @@ export function EntryTable(props: Props) {
 
   return (
     <ScrollArea>
-      <Table miw={800} verticalSpacing="sm">
+      <Table miw={800} verticalSpacing="sm" highlightOnHover>
         <Table.Thead>
           <Table.Tr>
             <Table.Th style={{ width: rem(40) }}>
