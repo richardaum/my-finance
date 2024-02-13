@@ -3,12 +3,17 @@ import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next/initReactI18next";
 import { i18nConfig } from "~/i18nConfig";
 
-export async function initTranslations(
-  locale: string,
-  namespaces: string[],
-  i18nInstance?: i18n,
-  resources?: Resource,
-) {
+export async function initTranslations({
+  locale,
+  namespaces,
+  i18nInstance,
+  resources,
+}: {
+  locale: string;
+  namespaces: string[];
+  i18nInstance?: i18n;
+  resources?: Resource;
+}) {
   i18nInstance = i18nInstance || createInstance();
 
   i18nInstance.use(initReactI18next);

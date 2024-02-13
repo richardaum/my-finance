@@ -18,7 +18,7 @@ type Props = {
 const namespaces = ["EntryTable", "CreateEntryModal"];
 
 export default async function HomePage({ params: { locale } }: Props) {
-  const { resources } = await initTranslations(locale, namespaces);
+  const { resources } = await initTranslations({ locale, namespaces });
 
   const entries = await fetchEntries();
   const categories = await fetchCategories();
