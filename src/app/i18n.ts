@@ -14,7 +14,7 @@ export async function initTranslations({
   i18nInstance?: i18n;
   resources?: Resource;
 }) {
-  i18nInstance = i18nInstance || createInstance();
+  i18nInstance = i18nInstance ?? createInstance();
 
   i18nInstance.use(initReactI18next);
 

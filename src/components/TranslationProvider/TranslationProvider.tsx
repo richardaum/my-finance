@@ -1,11 +1,9 @@
 "use client";
 
+import { createInstance, type Resource } from "i18next";
+import { useRef } from "react";
 import { I18nextProvider } from "react-i18next";
-import { type Resource, createInstance } from "i18next";
 import { initTranslations } from "~/app/i18n";
-import { useEffect } from "react";
-
-const i18n = createInstance();
 
 export function TranslationsProvider({
   children,
@@ -18,10 +16,9 @@ export function TranslationsProvider({
   namespaces: string[];
   resources: Resource;
 }) {
-  useEffect(() => {
-    void initTranslations({ locale, namespaces, resources });
-  }, [locale, namespaces, resources]);
+  const i18nRef = useRef(createInstance());
 
-  return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
+  void initTranslations({ locale, namespaces, resources, i18nInstance: i18nRef.current });
+
+  return <I18nextProvider i18n={i18nRef.current}>{children}</I18nextProvider>;
 }
-1;
