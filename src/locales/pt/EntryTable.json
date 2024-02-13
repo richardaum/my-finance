@@ -10,5 +10,8 @@
   "entryTable.status.EXPIRED": "Expirado",
   "entryTable.status.PAID": "Pago",
   "entryTable.status.PENDING": "Pendente",
-  "entryTable.repeat": "Recorrente"
+  "entryTable.repeat": "Recorrente",
+  "entryTable.edit.label": "Editar",
+  "entryTable.delete.label": "Excluir",
+  "entryTable.pay.label": "Efetivar"
 }

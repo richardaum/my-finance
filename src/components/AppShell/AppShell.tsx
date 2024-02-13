@@ -23,11 +23,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <Stack align="center">
           <Flex>
             {opened ? (
-              <Button fullWidth leftSection={<FontAwesomeIcon icon={faPlus} />} onClick={createEntryModal.open}>
+              <Button fullWidth leftSection={<FontAwesomeIcon icon={faPlus} />} onClick={() => createEntryModal.open()}>
                 {t("button.addEntry")}
               </Button>
             ) : (
-              <ActionIcon onClick={createEntryModal.open}>
+              <ActionIcon onClick={() => createEntryModal.open()}>
                 <FontAwesomeIcon icon={faPlus} />
               </ActionIcon>
             )}

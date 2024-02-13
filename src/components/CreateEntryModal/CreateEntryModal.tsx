@@ -1,6 +1,6 @@
 "use client";
 import { faBookmark, faCalendar, faNoteSticky } from "@fortawesome/free-regular-svg-icons";
-import { faBank, faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { faAnglesRight, faBank, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
@@ -26,6 +26,7 @@ import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { mergeWith } from "lodash";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CurrencyInput } from "~/components/CurrencyInput";
 import { useCreateEntryModalContext } from "~/contexts/createEntryModal";
@@ -34,8 +35,8 @@ import { useFocus } from "~/hooks/useFocus";
 import { useGetAccountsQuery } from "~/hooks/useGetAccountsQuery";
 import { useGetCategoriesQuery } from "~/hooks/useGetCategoriesQuery";
 import { useResetState } from "~/hooks/useResetState";
-import { type Entry } from "~/types/entry";
-import { type FetchAccountsReturnType, type FetchCategoriesReturnType } from "~/types/services";
+import { type EntryFormValue } from "~/types/entry";
+import { type Entry, type FetchAccountsReturnType, type FetchCategoriesReturnType } from "~/types/services";
 import { currency } from "~/utils/currency";
 import { mergeFunctions } from "~/utils/merge";
 
@@ -91,8 +92,9 @@ export function CreateEntryModal(props: Props) {
   const categoriesResult = useGetCategoriesQuery({ initialData: props.categories });
   const accountsResult = useGetAccountsQuery({ initialData: props.accounts });
   const [isFullscreen, setFullscreen, resetFullscreen] = useResetState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  const formInitialValues: Readonly<Entry> = {
+  const formInitialValues: Readonly<EntryFormValue> = {
     description: "",
     amount: 0,
     date: new Date(),
@@ -106,31 +108,45 @@ export function CreateEntryModal(props: Props) {
     splitAmountType: undefined,
   };
 
-  const form = useForm({
+  const form = useForm<EntryFormValue>({
     validateInputOnChange: true,
-    initialValues: formInitialValues,
+    initialValues: createEntryModal.entry ? convertEntryToFormValues(createEntryModal.entry) : formInitialValues,
     validate: {
       amount: (value) => (value <= 0 ? t("createEntryModal.amount.lessOrEqualToZero") : null),
     },
   });
 
+  useEffect(() => {
+    if (!form.isDirty() && createEntryModal.isOpen && createEntryModal.mode === "edit" && createEntryModal.entry) {
+      const values = convertEntryToFormValues(createEntryModal.entry);
+      form.setValues(values);
+    }
+  }, [createEntryModal.entry, createEntryModal.isOpen, createEntryModal.mode, form]);
+
   function closeModal() {
-    form.reset();
     createEntryModal.close();
+    form.reset();
     resetFullscreen();
   }
 
-  function handleChangeRepeatType(repeatType: Entry["repeatType"]) {
+  function handleChangeRepeatType(repeatType: EntryFormValue["repeatType"]) {
     form.setValues(defaultValuesByRepeatType[repeatType]);
   }
 
+  function handleMoreOptionsClick() {
+    // Prevent loose focus when clicking on a button that will disappear
+    modalRef.current?.querySelector("input")?.focus();
+    setFullscreen(true);
+  }
+
   return (
-    <ModalRoot opened={createEntryModal.isOpen} onClose={closeModal} fullScreen={isFullscreen}>
+    <ModalRoot opened={createEntryModal.isOpen} onClose={closeModal} fullScreen={isFullscreen} ref={modalRef}>
       <ModalOverlay />
 
       <ModalContent>
         <form
           onSubmit={form.onSubmit((values) => {
+            // TODO need to call a separate mutation to edit
             createEntryMutation.mutate({
               // ...values,
               description: values.description,
@@ -237,7 +253,11 @@ export function CreateEntryModal(props: Props) {
                 <Group justify="right">
                   {!isFullscreen && (
                     <>
-                      <Button variant="outline" onClick={() => setFullscreen(true)}>
+                      <Button
+                        variant="outline"
+                        onClick={handleMoreOptionsClick}
+                        leftSection={form.values.repeatType !== "NO_REPEAT" && <FontAwesomeIcon icon={faAnglesRight} />}
+                      >
                         {t("createEntryModal.moreOptions")}
                       </Button>
                       <Button type="submit" variant="filled">
@@ -336,8 +356,26 @@ export function CreateEntryModal(props: Props) {
   );
 }
 
-function getAmount(entry: Entry) {
+function getAmount(entry: EntryFormValue) {
   return entry.repeatType === "SPLIT" && entry.splitAmountType === "SPLIT" && entry.quantityOfSplits
     ? entry.amount / entry.quantityOfSplits
     : entry.amount;
+}
+
+function convertEntryToFormValues(entry: Entry) {
+  const formValues: EntryFormValue = {
+    description: entry.description,
+    amount: entry.amount,
+    date: new Date(entry.date),
+    category: entry.category.id,
+    account: entry.account.id,
+    repeatType: entry.repeat?.type ?? "NO_REPEAT",
+    frequency: entry.repeat?.frequency,
+    initialSplit: entry.repeat?.initialSplit,
+    quantityOfSplits: entry.repeat?.quantityOfSplits,
+    splitAmountType: entry.repeat?.splitAmountType,
+    tags: [],
+  };
+
+  return formValues;
 }

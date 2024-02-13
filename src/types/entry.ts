@@ -1,4 +1,4 @@
-export type Entry = {
+export type EntryFormValue = {
   description: string;
   amount: number;
   date: Date;
@@ -6,8 +6,8 @@ export type Entry = {
   account?: string;
   tags: never[];
   repeatType: "NO_REPEAT" | "SPLIT" | "REPEAT" | "FIXED";
-  frequency?: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
-  initialSplit?: number;
-  quantityOfSplits?: number;
-  splitAmountType?: "TOTAL" | "SPLIT";
+  frequency?: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY" | null;
+  initialSplit?: number | null;
+  quantityOfSplits?: number | null;
+  splitAmountType?: "TOTAL" | "SPLIT" | null;
 };

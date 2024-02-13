@@ -1,0 +1,22 @@
+.row {
+  &:hover,
+  &:focus-visible {
+    .actions {
+      display: flex;
+    }
+    /* background: red; */
+  }
+
+  .actions {
+    display: none;
+
+    position: absolute;
+    gap: 4px;
+    right: 0;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-end;
+    padding: var(--table-vertical-spacing) var(--table-horizontal-spacing, var(--mantine-spacing-xs));
+    background: var(--_table-hover-color);
+  }
+}

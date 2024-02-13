@@ -1,15 +1,29 @@
 "use client";
 
 import { type IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faCalendarTimes, faCircleCheck, faWarning, faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { faCalendarTimes, faCircleCheck, faRepeat, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Checkbox, Table, ScrollArea, ThemeIcon, rem, type DefaultMantineColor, Group, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Checkbox,
+  Group,
+  ScrollArea,
+  Table,
+  Text,
+  ThemeIcon,
+  rem,
+  type DefaultMantineColor,
+} from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetEntriesQuery } from "~/hooks/useGetEntriesQuery";
 import { type FetchEntriesReturnType } from "~/types/services";
 import { currency } from "~/utils/currency";
-import { date } from "~/utils/date";
+import { date, datetime } from "~/utils/date";
+import classes from "./EntryTable.module.css";
+import { useCreateEntryModalContext } from "~/contexts/createEntryModal";
 
 function Icon({ icon, ...props }: { color: DefaultMantineColor; icon: IconProp; title: string }) {
   return (
@@ -24,6 +38,7 @@ type Props = {
 };
 
 export function EntryTable(props: Props) {
+  const createEntryModal = useCreateEntryModalContext();
   const { t } = useTranslation("EntryTable");
   const [selection, setSelection] = useState<string[]>([]);
   const entriesResult = useGetEntriesQuery({ initialData: props.entries });
@@ -38,7 +53,7 @@ export function EntryTable(props: Props) {
 
   return (
     <ScrollArea>
-      <Table miw={800} verticalSpacing="sm" highlightOnHover>
+      <Table miw={800} verticalSpacing="sm" highlightOnHover classNames={{ tr: classes.row }}>
         <Table.Thead>
           <Table.Tr>
             <Table.Th style={{ width: rem(40) }}>
@@ -54,14 +69,13 @@ export function EntryTable(props: Props) {
             <Table.Th>{t("entryTable.heading.category")}</Table.Th>
             <Table.Th>{t("entryTable.heading.account")}</Table.Th>
             <Table.Th ta="right">{t("entryTable.heading.amount")}</Table.Th>
-            <Table.Th ta="right">{t("entryTable.heading.actions")}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
           {entries.map((entry) => {
             const selected = selection.includes(entry.id);
             return (
-              <Table.Tr key={entry.id} bg={selected ? "var(--mantine-color-blue-light)" : undefined}>
+              <Table.Tr key={entry.id} bg={selected ? "var(--mantine-color-blue-light)" : undefined} pos="relative">
                 <Table.Td>
                   <Checkbox checked={selection.includes(entry.id)} onChange={() => toggleRow(entry.id)} />
                 </Table.Td>
@@ -76,7 +90,7 @@ export function EntryTable(props: Props) {
                     <Icon color="green" icon={faCircleCheck} title={t(`entryTable.status.${entry.status}`)} />
                   )}
                 </Table.Td>
-                <Table.Td>{date.format(new Date(entry.date))}</Table.Td>
+                <Table.Td title={datetime.format(new Date(entry.date))}>{date.format(new Date(entry.date))}</Table.Td>
                 <Table.Td>
                   <Group gap="xs">
                     <Text size="sm">{entry.description}</Text>
@@ -86,7 +100,26 @@ export function EntryTable(props: Props) {
                 <Table.Td>{entry.category.name}</Table.Td>
                 <Table.Td>{entry.account.name}</Table.Td>
                 <Table.Td ta="right">{currency.format(entry.amount)}</Table.Td>
-                <Table.Td />
+
+                <Box component="td" className={classes.actions}>
+                  <ActionIcon variant="subtle" aria-label="Settings" color="gray" title={t("entryTable.pay.label")}>
+                    <FontAwesomeIcon icon={faCircleCheck} />
+                  </ActionIcon>
+
+                  <ActionIcon
+                    variant="subtle"
+                    aria-label="Settings"
+                    color="gray"
+                    title={t("entryTable.edit.label")}
+                    onClick={() => createEntryModal.open({ mode: "edit", entry })}
+                  >
+                    <FontAwesomeIcon icon={faEdit} />
+                  </ActionIcon>
+
+                  <ActionIcon variant="subtle" aria-label="Settings" color="gray" title={t("entryTable.delete.label")}>
+                    <FontAwesomeIcon icon={faTrashCan} />
+                  </ActionIcon>
+                </Box>
               </Table.Tr>
             );
           })}

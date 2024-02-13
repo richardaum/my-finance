@@ -4,6 +4,7 @@ import { type fetchEntries } from "~/services/fetchEntries";
 
 export type FetchEntries = typeof fetchEntries;
 export type FetchEntriesReturnType = Awaited<ReturnType<FetchEntries>>;
+export type Entry = FetchEntriesReturnType[0];
 
 export type FetchCategories = typeof fetchCategories;
 export type FetchCategoriesReturnType = Awaited<ReturnType<FetchCategories>>;

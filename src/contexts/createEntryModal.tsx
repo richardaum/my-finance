@@ -1,21 +1,31 @@
 "use client";
 
 import { createContextState } from "create-context-state";
-import { type Entry } from "~/types/entry";
+import { type Entry } from "~/types/services";
+
+type Mode = "create" | "edit";
 
 export const [CreateEntryModalProvider, useCreateEntryModalContext] = createContextState<{
   entry?: Entry;
+  mode?: Mode;
   isOpen: boolean;
-  open: () => void;
+  open: (editOptions?: { mode: "edit"; entry: Entry }) => void;
   close: () => void;
   reset: () => void;
 }>(({ set }) => ({
   isOpen: false,
-  open: () => set((state) => ({ ...state, isOpen: true })),
-  close: () => set((state) => ({ ...state, isOpen: false })),
+  open: (options) =>
+    set((state) => {
+      if (isEditOptions(options)) {
+        const { mode, entry } = options;
+        return { ...state, mode, entry, isOpen: true };
+      }
+      return { ...state, mode: "create", isOpen: true };
+    }),
+  close: () => set(() => ({ isOpen: false })),
   reset: () => ({ isOpen: false }),
-
-  save: () => {
-    console.log("Save");
-  },
 }));
+
+function isEditOptions(options: { mode: "edit"; entry: Entry } | undefined): options is { mode: "edit"; entry: Entry } {
+  return options?.mode === "edit";
+}
