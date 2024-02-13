@@ -4,6 +4,7 @@ import { faBank, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
+  Code,
   Group,
   ModalBody,
   ModalCloseButton,
@@ -33,6 +34,7 @@ import { useFocus } from "~/hooks/useFocus";
 import { useGetAccountsQuery } from "~/hooks/useGetAccountsQuery";
 import { useGetCategoriesQuery } from "~/hooks/useGetCategoriesQuery";
 import { useResetState } from "~/hooks/useResetState";
+import { type Entry } from "~/types/entry";
 import { type FetchAccountsReturnType, type FetchCategoriesReturnType } from "~/types/services";
 import { currency } from "~/utils/currency";
 import { mergeFunctions } from "~/utils/merge";
@@ -45,20 +47,31 @@ function FieldIcon({ children, isFocused }: { children: React.ReactNode; isFocus
   );
 }
 
-type FormValues = {
-  description: string;
-  amount: number;
-  date: Date;
-  category: string | undefined;
-  account: string | undefined;
-  tags: never[];
-  infinite: boolean;
-  times: number;
-  repeatType: "NO_REPEAT" | "SPLIT" | "REPEAT" | "FIXED";
-  frequency: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
-  initialSplit: number;
-  quantityOfSplits: number;
-  splitAmountType: "TOTAL" | "SPLIT";
+const defaultValuesByRepeatType = {
+  NO_REPEAT: {
+    frequency: undefined,
+    initialSplit: undefined,
+    quantityOfSplits: undefined,
+    splitAmountType: undefined,
+  } as const,
+  SPLIT: {
+    frequency: "MONTHLY",
+    initialSplit: 1,
+    quantityOfSplits: 2,
+    splitAmountType: "SPLIT",
+  } as const,
+  REPEAT: {
+    frequency: "MONTHLY",
+    initialSplit: 1,
+    quantityOfSplits: 2,
+    splitAmountType: "SPLIT",
+  } as const,
+  FIXED: {
+    frequency: "MONTHLY",
+    initialSplit: undefined,
+    quantityOfSplits: undefined,
+    splitAmountType: undefined,
+  } as const,
 };
 
 type Props = {
@@ -79,23 +92,23 @@ export function CreateEntryModal(props: Props) {
   const accountsResult = useGetAccountsQuery({ initialData: props.accounts });
   const [isFullscreen, setFullscreen, resetFullscreen] = useResetState(false);
 
-  const form = useForm<FormValues>({
+  const formInitialValues: Readonly<Entry> = {
+    description: "",
+    amount: 0,
+    date: new Date(),
+    category: categoriesResult.data[0]?.id,
+    account: accountsResult.data[0]?.id,
+    tags: [],
+    repeatType: "NO_REPEAT",
+    frequency: undefined,
+    initialSplit: undefined,
+    quantityOfSplits: undefined,
+    splitAmountType: undefined,
+  };
+
+  const form = useForm({
     validateInputOnChange: true,
-    initialValues: {
-      description: "",
-      amount: 0,
-      date: new Date(),
-      category: categoriesResult.data[0]?.id,
-      account: accountsResult.data[0]?.id,
-      tags: [],
-      infinite: false,
-      times: 1,
-      repeatType: "NO_REPEAT",
-      frequency: "MONTHLY",
-      initialSplit: 1,
-      quantityOfSplits: 2,
-      splitAmountType: "SPLIT",
-    },
+    initialValues: formInitialValues,
     validate: {
       amount: (value) => (value <= 0 ? t("createEntryModal.amount.lessOrEqualToZero") : null),
     },
@@ -105,6 +118,10 @@ export function CreateEntryModal(props: Props) {
     form.reset();
     createEntryModal.close();
     resetFullscreen();
+  }
+
+  function handleChangeRepeatType(repeatType: Entry["repeatType"]) {
+    form.setValues(defaultValuesByRepeatType[repeatType]);
   }
 
   return (
@@ -123,6 +140,18 @@ export function CreateEntryModal(props: Props) {
               category: { connect: { id: values.category } },
               account: { connect: { id: values.account } },
               tags: {},
+              repeat:
+                values.repeatType !== "NO_REPEAT"
+                  ? {
+                      create: {
+                        type: values.repeatType,
+                        frequency: values.frequency,
+                        initialSplit: values.initialSplit,
+                        quantityOfSplits: values.quantityOfSplits,
+                        splitAmountType: values.splitAmountType,
+                      },
+                    }
+                  : undefined,
             });
 
             closeModal();
@@ -226,16 +255,7 @@ export function CreateEntryModal(props: Props) {
                       {...mergeWith(
                         repeatFocus.props,
                         form.getInputProps("repeatType"),
-                        {
-                          onChange: () => {
-                            form.setValues({
-                              frequency: "MONTHLY",
-                              initialSplit: 1,
-                              quantityOfSplits: 2,
-                              splitAmountType: "SPLIT",
-                            });
-                          },
-                        },
+                        { onChange: handleChangeRepeatType },
                         mergeFunctions,
                       )}
                       required
@@ -304,6 +324,8 @@ export function CreateEntryModal(props: Props) {
                       }
                     />
                   )}
+
+                  <Code block>{JSON.stringify(form.values, null, 2)}</Code>
                 </Stack>
               )}
             </SimpleGrid>
@@ -314,8 +336,8 @@ export function CreateEntryModal(props: Props) {
   );
 }
 
-function getAmount(values: FormValues) {
-  return values.repeatType === "SPLIT" && values.splitAmountType === "SPLIT"
-    ? values.amount / values.quantityOfSplits
-    : values.amount;
+function getAmount(entry: Entry) {
+  return entry.repeatType === "SPLIT" && entry.splitAmountType === "SPLIT" && entry.quantityOfSplits
+    ? entry.amount / entry.quantityOfSplits
+    : entry.amount;
 }

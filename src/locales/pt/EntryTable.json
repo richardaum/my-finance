@@ -1,13 +1,14 @@
 {
-  "button.addEntry": "Adicionar lançamento",
-  "heading.account": "Conta",
-  "heading.actions": "Ações",
-  "heading.amount": "Valor",
-  "heading.category": "Categoria",
-  "heading.date": "Data",
-  "heading.description": "Descrição",
-  "heading.status": "Status",
-  "status.EXPIRED": "Expirado",
-  "status.PAID": "Pago",
-  "status.PENDING": "Pendente"
+  "entryTable.button.addEntry": "Adicionar lançamento",
+  "entryTable.heading.account": "Conta",
+  "entryTable.heading.actions": "Ações",
+  "entryTable.heading.amount": "Valor",
+  "entryTable.heading.category": "Categoria",
+  "entryTable.heading.date": "Data",
+  "entryTable.heading.description": "Descrição",
+  "entryTable.heading.status": "Status",
+  "entryTable.status.EXPIRED": "Expirado",
+  "entryTable.status.PAID": "Pago",
+  "entryTable.status.PENDING": "Pendente",
+  "entryTable.repeat": "Recorrente"
 }

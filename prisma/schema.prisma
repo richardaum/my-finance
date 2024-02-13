@@ -29,18 +29,20 @@ model Entry {
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
   repeatId    String?
-  repeat      Repeat?  @relation(references: [id], fields: [repeatId])
+  repeat      Repeat?  @relation(references: [id], fields: [repeatId], onDelete: Cascade, onUpdate: Cascade)
   accountId   String
   account     Account  @relation(fields: [accountId], references: [id])
   tags        Tag[]
 }
 
 model Repeat {
-  id      String     @id @default(uuid())
-  times   Int?
-  unit    RepeatUnit
-  endDate DateTime?
-  entries Entry[]
+  id               String           @id @default(uuid())
+  type             RepeatType
+  frequency        Frequency?
+  initialSplit     Int?
+  quantityOfSplits Int?
+  splitAmountType  SplitAmountType?
+  entries          Entry[]
 }
 
 model Tag {
@@ -55,9 +57,20 @@ enum Status {
   EXPIRED
 }
 
-enum RepeatUnit {
+enum RepeatType {
+  SPLIT
+  REPEAT
+  FIXED
+}
+
+enum Frequency {
   DAILY
   WEEKLY
   MONTHLY
   YEARLY
+}
+
+enum SplitAmountType {
+  TOTAL
+  SPLIT
 }
