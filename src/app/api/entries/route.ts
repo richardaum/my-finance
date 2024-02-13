@@ -1,10 +1,10 @@
-import { Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { fetchEntries } from "~/services/fetchEntries";
 import { prisma } from "~/services/prisma";
 
 export async function POST(request: Request) {
-  const payload: Prisma.EntryCreateInput = await request.json();
+  const payload = (await request.json()) as Prisma.EntryCreateInput;
   const entry = await prisma.entry.create({ data: payload });
   return NextResponse.json(entry);
 }

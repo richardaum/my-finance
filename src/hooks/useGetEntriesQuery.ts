@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { FetchEntriesReturnType } from "~/types/services";
+import { type FetchEntriesReturnType } from "~/types/services";
 
 export const getEntriesQueryKey = ["entries"] as const;
 

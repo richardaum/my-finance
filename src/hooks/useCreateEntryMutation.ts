@@ -1,9 +1,9 @@
-import { Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosResponse } from "axios";
+import axios, { type AxiosResponse } from "axios";
 import { getEntriesQueryKey } from "~/hooks/useGetEntriesQuery";
 
-type CreatedEntry = any;
+type CreatedEntry = unknown;
 
 export function useCreateEntryMutation() {
   const queryClient = useQueryClient();

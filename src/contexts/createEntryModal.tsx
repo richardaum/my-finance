@@ -7,7 +7,7 @@ export const [CreateEntryModalProvider, useCreateEntryModalContext] = createCont
   open: () => void;
   close: () => void;
   reset: () => void;
-}>(({ set, get }) => ({
+}>(({ set }) => ({
   isOpen: false,
   open: () => set((state) => ({ ...state, isOpen: true })),
   close: () => set((state) => ({ ...state, isOpen: false })),

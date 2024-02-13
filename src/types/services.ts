@@ -1,6 +1,6 @@
-import { fetchAccounts } from "~/services/fetchAccounts";
-import { fetchCategories } from "~/services/fetchCategories";
-import { fetchEntries } from "~/services/fetchEntries";
+import { type fetchAccounts } from "~/services/fetchAccounts";
+import { type fetchCategories } from "~/services/fetchCategories";
+import { type fetchEntries } from "~/services/fetchEntries";
 
 export type FetchEntries = typeof fetchEntries;
 export type FetchEntriesReturnType = Awaited<ReturnType<FetchEntries>>;
