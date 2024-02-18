@@ -8,7 +8,7 @@ import { useCreateEntryModalContext } from "~/contexts/createEntryModal";
 import classes from "./AppShell.module.css";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("AppShell");
   const [opened, { toggle }] = useDisclosure();
   const createEntryModal = useCreateEntryModalContext();
 
@@ -16,7 +16,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <MantineAppShell
       layout="alt"
       header={{ height: 60 }}
-      navbar={{ width: opened ? 300 : 80, breakpoint: "sm" }}
+      navbar={{ width: opened ? 300 : 80, breakpoint: "0" }}
       padding="md"
     >
       <AppShellNavbar p="lg" classNames={{ navbar: classes.navbar }}>
@@ -24,7 +24,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Flex>
             {opened ? (
               <Button fullWidth leftSection={<FontAwesomeIcon icon={faPlus} />} onClick={() => createEntryModal.open()}>
-                {t("button.addEntry")}
+                {t("appShell.button.addEntry")}
               </Button>
             ) : (
               <ActionIcon onClick={() => createEntryModal.open()}>

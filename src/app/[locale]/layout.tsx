@@ -7,11 +7,11 @@ import "mantine-datatable/styles.layer.css";
 import "~/styles/globals.css";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import { Notifications } from "@mantine/notifications";
+import { ColorSchemeScript } from "@mantine/core";
 import { Inter } from "next/font/google";
 import { DateProvider } from "~/providers/DateProvider";
 import { ReactQueryProvider } from "~/providers/ReactQueryProvider";
+import { ThemeProvider } from "~/providers/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,21 +26,23 @@ export const metadata = {
 
 config.autoAddCss = false;
 
+type Provider = (props: { children: React.ReactNode }) => React.ReactElement;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const providers: Provider[] = [ReactQueryProvider, ThemeProvider, DateProvider];
+
   return (
     <html lang="en">
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body className={`font-sans ${inter.variable}`}>
-        <ReactQueryProvider>
-          <MantineProvider defaultColorScheme="auto" theme={{ fontFamily: "Lato" }}>
-            <DateProvider>
-              <Notifications />
-              {children}
-            </DateProvider>
-          </MantineProvider>
-        </ReactQueryProvider>
+        {providers.reduceRight(
+          (component, Provider, index) => (
+            <Provider key={index}>{component}</Provider>
+          ),
+          children,
+        )}
       </body>
     </html>
   );

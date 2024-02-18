@@ -3,16 +3,16 @@ import { faBookmark, faCalendar, faNoteSticky } from "@fortawesome/free-regular-
 import { faAnglesRight, faBank, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  Box,
   Button,
   Code,
+  Flex,
   Group,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
   ModalOverlay,
   ModalRoot,
-  ModalTitle,
   NumberInput,
   SegmentedControl,
   Select,
@@ -24,7 +24,7 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
+import { notifications, showNotification } from "@mantine/notifications";
 import { mergeWith } from "lodash";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -146,6 +146,11 @@ export function CreateEntryModal(props: Props) {
       <ModalContent>
         <form
           onSubmit={form.onSubmit((values) => {
+            if (createEntryModal.mode === "edit") {
+              showNotification({ message: "Não disponível" });
+              return;
+            }
+
             // TODO need to call a separate mutation to edit
             createEntryMutation.mutate({
               // ...values,
@@ -180,19 +185,21 @@ export function CreateEntryModal(props: Props) {
             });
           })}
         >
-          <ModalHeader>
-            <ModalTitle>
-              <Group>
-                <span>{t("createEntryModal.title")}</span>
-                {isFullscreen && (
-                  <Button ml="auto" type="submit" variant="filled">
-                    {t("createEntryModal.submit")}
-                  </Button>
-                )}
-              </Group>
-            </ModalTitle>
-            <ModalCloseButton />
-          </ModalHeader>
+          <SimpleGrid cols={isFullscreen ? 2 : 1}>
+            <Flex align="center" p="md" direction={isFullscreen ? "row" : "row-reverse"}>
+              <ModalCloseButton ml={isFullscreen ? 0 : "auto"} mr={isFullscreen ? "md" : 0} />
+              <span>{t("createEntryModal.title")}</span>
+            </Flex>
+
+            {isFullscreen && (
+              <Box py="md">
+                <Button ml="auto" type="submit" variant="filled">
+                  {t("createEntryModal.submit")}
+                </Button>
+              </Box>
+            )}
+          </SimpleGrid>
+
           <ModalBody>
             <SimpleGrid cols={isFullscreen ? 2 : 1}>
               <Stack>

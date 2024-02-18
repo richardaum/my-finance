@@ -15,7 +15,7 @@ type Props = {
   };
 };
 
-const namespaces = ["EntryTable", "CreateEntryModal"];
+const namespaces = ["EntryTable", "CreateEntryModal", "AppShell"];
 
 export default async function HomePage({ params: { locale } }: Props) {
   const { resources } = await initTranslations({ locale, namespaces });
