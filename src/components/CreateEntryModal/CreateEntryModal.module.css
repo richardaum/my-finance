@@ -1,0 +1,5 @@
+.empty {
+  text-align: left;
+  padding: 0;
+  color: var(--_option-color, inherit);
+}

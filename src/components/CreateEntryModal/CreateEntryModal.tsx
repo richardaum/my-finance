@@ -1,4 +1,5 @@
 "use client";
+import classes from "./CreateEntryModal.module.css";
 import { faBookmark, faCalendar, faNoteSticky } from "@fortawesome/free-regular-svg-icons";
 import { faAnglesRight, faBank, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,6 +7,7 @@ import {
   Box,
   Button,
   Code,
+  ComboboxOption,
   Flex,
   Group,
   ModalBody,
@@ -26,7 +28,7 @@ import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { notifications, showNotification } from "@mantine/notifications";
 import { mergeWith } from "lodash";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CurrencyInput } from "~/components/CurrencyInput";
 import { useCreateEntryModalContext } from "~/contexts/createEntryModal";
@@ -93,12 +95,13 @@ export function CreateEntryModal(props: Props) {
   const accountsResult = useGetAccountsQuery({ initialData: props.accounts });
   const [isFullscreen, setFullscreen, resetFullscreen] = useResetState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const [searchValue, setSearchValue] = useState('');
 
   const formInitialValues: Readonly<EntryFormValue> = {
     description: "",
     amount: 0,
     date: new Date(),
-    category: categoriesResult.data[0]?.id,
+    // category: categoriesResult.data[0]?.id,
     account: accountsResult.data[0]?.id,
     tags: [],
     repeatType: "NO_REPEAT",
@@ -230,13 +233,21 @@ export function CreateEntryModal(props: Props) {
                 />
                 <Select
                   {...mergeWith(categoryFocus.props, form.getInputProps("category"), mergeFunctions)}
+                  classNames={{ empty: classes.empty }}
                   required
                   searchable
                   allowDeselect={false}
                   label={t("createEntryModal.category")}
                   placeholder={t("createEntryModal.selectPlaceholder")}
                   data={categoriesResult.data.map((category) => ({ label: category.name, value: category.id }))}
-                  selectFirstOptionOnChange
+                  searchValue={searchValue}
+                  onSearchChange={v=>{
+                    console.log(v)
+                    setSearchValue(v)
+                  }}
+                  nothingFoundMessage={
+                    <ComboboxOption value="">Criar nova categoria {`"${searchValue}"`}</ComboboxOption>
+                  }
                   leftSection={
                     <FieldIcon {...categoryFocus}>
                       <FontAwesomeIcon icon={faBookmark} />
